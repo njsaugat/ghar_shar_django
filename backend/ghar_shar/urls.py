@@ -17,12 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.views.generic.base import RedirectView
-from .views import signup
+# from .views import signup
+from .views import SignupView,LoginView,get_user
 
 urlpatterns = [
     # path('',RedirectView.as_view(url='/accounts/login/',permanent=True)),
     path("admin/", admin.site.urls),
     path("accounts/",include("django.contrib.auth.urls")), #django.contrib.auth -->app's name
-    path("signup/",signup, name='signup')
-
+    # path("signup/",signup, name='signup'),
+    path('api/signup/',SignupView.as_view(),name='api-signup'),
+    path('api/login/',LoginView.as_view(),name='api-login'),
+    path('api/user/',get_user),
+    path('api/',include("listings.urls")),
+    
 ]
