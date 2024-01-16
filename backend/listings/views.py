@@ -29,7 +29,7 @@ class ListingAPIView(APIView):
         
         if serializedData.is_valid():
             serializedData.save()
-            return Response(serializedData,status=status.HTTP_201_CREATED)
+            return Response(serializedData.data,status=status.HTTP_201_CREATED)
         return Response(serializedData.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class ListingDetailAPIView(APIView):

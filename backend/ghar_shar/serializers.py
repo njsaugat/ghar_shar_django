@@ -5,4 +5,4 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         print("here from serializer-------->")
         model=User
-        fields=['id','email','first_name','last_name']
+        fields=['id','email','first_name','last_name','password','username']

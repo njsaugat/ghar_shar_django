@@ -1,18 +1,29 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated
 from .serializers import UserSerializer
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from rest_framework.decorators import api_view
-
+from django.contrib.auth.hashers import make_password,check_password
+def get_form_data(request):
+    data = {
+    'first_name': request.data.get("first_name"), 
+    'last_name':request.data.get("last_name"),
+    'username':request.data.get("username"),
+    'email': request.data.get("email"),
+    'password':make_password(request.data.get("password")),
+    }
+    return data
 class SignupView(APIView):
     permission_classes=[AllowAny]
     
-    @api_view(['POST'])
+    # @api_view(['POST'])
     def post(self,request,*args,**kwargs):
-        serializer=UserSerializer(data=request.data)
+        data=get_form_data(request=request)
+        print("----->",data)
+        serializer=UserSerializer(data=data)
         if serializer.is_valid():
             user=serializer.save()
             login(request,user)
@@ -26,13 +37,24 @@ class LoginView(APIView):
     def post(self, request, *args,**kwargs):
         username=request.data.get('username')
         password=request.data.get('password')
-        user=authenticate(request,username=username,password=password)
-        if user is not None:
+        # account = User(email=self.validated_data['email'], username=self.validated_data['password'])
+        # print("account-->",account)
+        print("--->",username,password)
+        user=authenticate(request, username=username,password=password)
+        print("user--------->",user)
+        if user is not None and check_password(password, user.password):
             login(request,user)
             serializer=UserSerializer(user)
             return Response(serializer.data)
         return Response({'error':'Invalid credentials'},status=status.HTTP_401_UNAUTHORIZED)
 
+
+class LogoutView(APIView):
+    permission_classes=[IsAuthenticated]
+    
+    def post(self,request,*args,**kwargs):
+        logout(request)
+        return Response({'message':'Logout successful'},status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def get_user(request):
