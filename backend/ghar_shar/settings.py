@@ -10,9 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
-from dotenv import load_dotenv
 import os
+import sys
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+print(sys.path)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,8 +31,17 @@ SECRET_KEY = "django-insecure-ybh!@z(+t=c($*qe-dvrt3g+fevd@hy#s(@(e(fz!fkkg^ikxc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CORS_ALLOW_ALL_ORIGINS = True
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Add your frontend's URL here
+]
+
+CORS_ALLOW_CREDENTIALS=True
+
+ALLOWED_HOSTS = ['http://localhost:3000','http://127.0.0.1:3000/','localhost']
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000','http://127.0.0.1:3000/']
 
 # Application definition
 
@@ -40,17 +54,20 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "listings",
-    "properties"
+    "properties",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "ghar_shar.middleware.AuthenticationMiddleware"
 ]
 
 ROOT_URLCONF = "ghar_shar.urls"

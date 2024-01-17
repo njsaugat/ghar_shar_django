@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from django.views.generic.base import RedirectView
 # from .views import signup
-from .views import SignupView,LoginView,LogoutView,get_user
+from .views import SignupView,LoginView,LogoutView,AuthenticatedView,get_user
 
 urlpatterns = [
     # path('',RedirectView.as_view(url='/accounts/login/',permanent=True)),
@@ -28,8 +28,10 @@ urlpatterns = [
     path('api/signup',SignupView.as_view(),name='api-signup'),
     path('api/login',LoginView.as_view(),name='api-login'),
     path('api/logout',LogoutView.as_view(),name='api-logout'),
+    path('api/isAuthenticated',AuthenticatedView.as_view(),name='api-authenticate'),
     path('api/user/',get_user),
     path('api/',include("listings.urls")),
     path('api/',include("properties.urls")),
+
     
 ]

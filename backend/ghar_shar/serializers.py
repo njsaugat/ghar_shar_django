@@ -6,3 +6,9 @@ class UserSerializer(serializers.ModelSerializer):
         print("here from serializer-------->")
         model=User
         fields=['id','email','first_name','last_name','password','username']
+
+
+class AuthenticatedResponseSerializer(serializers.Serializer):
+    loggedIn=serializers.BooleanField()
+    user_id=serializers.IntegerField(required=False)
+    message=serializers.CharField(required=False)
