@@ -1,10 +1,9 @@
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import Navbar from "../LandingPage/Navbar";
-import house from "../house.png";
 import { Link, useLocation, useParams } from "react-router-dom";
 import Footer from "../LandingPage/Footer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "../LandingPage/Navbar";
 import Loading from "../components/Loading";
 import { axios } from "../utils/apiclient";
 const viewsIcon = <FontAwesomeIcon icon={faEye} />;
@@ -18,9 +17,9 @@ function getRandomNumber() {
 
 function getPropertyAttributes(property) {
   document.title =
-    property.name.charAt(0).toUpperCase() + property.name.slice(1);
+    property?.name.charAt(0).toUpperCase() + property?.name.slice(1);
   const { location, furnished, bedRoom, livingRoom, bathRoom } = property;
-  const email = property.owner.email;
+  const email = property?.owner?.email;
   let propertyAttributes = {
     location,
     furnished: furnished === true ? "Yes" : "No",
@@ -42,7 +41,7 @@ const ShowProperty = () => {
   const [isLoading, setLoading] = useState(() => (state ? false : true));
   useEffect(() => {
     async function getProperties() {
-      const data = await axios.get("/property/" + params.id);
+      const data = await axios.get("/property?/" + params.id);
       const propertiesData = await data.json();
       setProperty(propertiesData);
       setLoading(false);
@@ -79,22 +78,22 @@ const ShowProperty = () => {
             className="w-11/12 transition-transform md:w-full hover:scale-105 rounded-xl"
             src={
               "http://127.0.0.1:5000/" +
-              property.imageUrl.substring(property.imageUrl.indexOf("photo"))
+              property?.imageUrl.substring(property?.imageUrl.indexOf("photo"))
             }
-            alt="property"
+            alt="property?"
             loading="lazy"
           />
           <div className="flex flex-col items-center justify-between text-l gap-y-5">
-            <Link to={`/user/${property.owner.id}`} state={property.owner}>
+            <Link to={`/user/${property?.owner?.id}`} state={property?.owner}>
               <div className="flex items-center justify-center w-16 h-16 capitalize transition-all duration-300 rounded-full nameGenerator bg-gradient-to-t from-sky-400 to-cyan-100 hover:shadow-xl hover:scale-105">
                 <span className="mt-2 text-5xl text-white">
-                  {property.owner.name.charAt(0)}
+                  {property?.owner?.name.charAt(0)}
                 </span>
               </div>
             </Link>
-            <Link to={`/user/${property.owner.id}`} state={property.owner}>
+            <Link to={`/user/${property?.owner?.id}`} state={property?.owner}>
               <span className="text-xl font-bold transition-all duration-300 hover:scale-105">
-                {property.owner.name}
+                {property?.owner?.name}
               </span>
             </Link>
             <span className="tracking-wide">
@@ -105,17 +104,17 @@ const ShowProperty = () => {
 
         <div className="flex flex-col w-full mb-20 right md:w-2/3 md:mb-0">
           <h1 className="mx-5 my-10 text-2xl font-bold tracking-wide capitalize md:text-3xl">
-            {property.name}
+            {property?.name}
           </h1>
           <span className="mx-5 mb-5 text-xl font-bold tracking-wide price">
-            रु {numberWithCommas(property.price)}
+            रु {numberWithCommas(property?.price)}
           </span>
-          <p className="mx-5 description">{property.description}</p>
+          <p className="mx-5 description">{property?.description}</p>
 
           <RenderPropertyAttributes />
           <div className="flex flex-col items-center justify-center mx-5 mb-10 md:w-1/2 md:mt-5 md:mb-16">
             <div className="flex items-center justify-center px-5 py-2 mx-5 mt-10 text-2xl tracking-wide text-black rounded-lg shadow-lg w-36 bg-gradient-to-t from-slate-200 to-cyan-100 ">
-              For {property.propertyType === "Rent" ? "Rent" : "Sale"}
+              For {property?.propertyType === "Rent" ? "Rent" : "Sale"}
             </div>
             <div className="w-3 h-16 shadow-lg bg-gradient-to-b from-slate-200 to-cyan-100"></div>
             <div className="w-1/2 h-1 bg-slate-400"></div>
@@ -124,9 +123,9 @@ const ShowProperty = () => {
             <span className="">Find other properties posted by </span>
             <Link
               className="font-bold hover:tracking-wide "
-              to={`/user/${property.owner.id}`}
+              to={`/user/${property?.owner?.id}`}
             >
-              {property.owner.name}
+              {property?.owner?.name}
             </Link>
           </div>
         </div>

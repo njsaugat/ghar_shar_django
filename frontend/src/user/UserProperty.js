@@ -36,10 +36,12 @@ const ShowUser = () => {
       <div className="flex flex-col w-screen bg-gradient-to-t from-slate-300 to-slate-50 md:flex-row">
         <div className="flex flex-col items-center w-full m-5 mb-10 left md:w-1/3 md:mb-1 ">
           <div className="flex items-center justify-center w-32 h-32 capitalize rounded-full nameGenerator bg-gradient-to-t from-sky-400 to-cyan-100">
-            <span className="text-white text-7xl">{user?.name?.charAt(0)}</span>
+            <span className="text-white text-7xl">
+              {user?.first_name?.charAt(0)}
+            </span>
           </div>
           <h1 className="mx-5 my-10 text-2xl font-bold tracking-wide capitalize md:text-3xl">
-            {user?.name}
+            {user?.first_name} {user?.last_name}
           </h1>
           <span className="mx-5 mb-5 text-xl font-bold tracking-wide price">
             {user?.properties?.length ? user?.properties?.length : 0} properties
@@ -58,6 +60,7 @@ const ShowUser = () => {
               />
             );
           })}
+          {user?.properties?.length === 0 ? <span className="text-4xl">No property listed.😔</span> : null}
         </div>
       </div>
       <Footer />
