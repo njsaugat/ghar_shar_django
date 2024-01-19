@@ -66,32 +66,32 @@ class AuthenticatedView(APIView):
     
     def get(self,request):
         session_id= request.COOKIES.get('sessionid')
-
-        if session_id:
-            try:
-                session=Session.objects.get(session_key=session_id)
-                if session.expire_date>timezone.now():
-                    user_id=session.get_decoded().get('_auth_user_id')
-                    user=User.objects.get(pk=user_id)
-
-                    if user.is_authenticated:
-                        serializer=AuthenticatedResponseSerializer({'loggedIn':True,'user_id':user_id})
-                        return Response(serializer.data,status=status.HTTP_200_OK)
-                    else:
-                        # User is not authenticated
-                        serializer = AuthenticatedResponseSerializer({'loggedIn': False, 'message': 'User not authenticated'})
-                        return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)                            
-                else:
-                    # Session is expired
-                    serializer = AuthenticatedResponseSerializer({'loggedIn': False, 'message': 'Session expired'})
-                    return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)
-            except Session.DoesNotExist:
-                # Invalid session ID
-                serializer = AuthenticatedResponseSerializer({'loggedIn': False, 'message': 'Invalid session ID'})
-                return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)
-        else:
+        if not session_id:
             serializer = AuthenticatedResponseSerializer({'loggedIn': False, 'message': 'Session ID not found'})
-            return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)       
+            return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)      
+        try:
+            session=Session.objects.get(session_key=session_id)
+            if session.expire_date<=timezone.now():
+                # Session is expired
+                serializer = AuthenticatedResponseSerializer({'loggedIn': False, 'message': 'Session expired'})
+                return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)
+            
+            user_id=session.get_decoded().get('_auth_user_id')
+            user=User.objects.get(pk=user_id)
+
+            if not user.is_authenticated:
+                # User is not authenticated
+                serializer = AuthenticatedResponseSerializer({'loggedIn': False, 'message': 'User not authenticated'})
+                return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)                            
+            serializer=AuthenticatedResponseSerializer({'loggedIn':True,'user_id':user_id})
+            return Response(serializer.data,status=status.HTTP_200_OK)
+            
+        except Session.DoesNotExist:
+            # Invalid session ID
+            serializer = AuthenticatedResponseSerializer({'loggedIn': False, 'message': 'Invalid session ID'})
+            return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)
+        
+               
     
 @api_view(['GET'])
 def get_user(request):
