@@ -9,7 +9,6 @@ class AuthenticationMiddleware:
         
     def __call__(self,request):
         session_id=request.COOKIES.get('sessionid')
-        
         if session_id:
             try:
                 session=Session.objects.get(session_key=session_id)
