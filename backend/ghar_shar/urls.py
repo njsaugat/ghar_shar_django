@@ -19,6 +19,9 @@ from django.urls import path,include
 from django.views.generic.base import RedirectView
 # from .views import signup
 from .views import SignupView,LoginView,LogoutView,AuthenticatedView,get_user
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     # path('',RedirectView.as_view(url='/accounts/login/',permanent=True)),
@@ -34,4 +37,4 @@ urlpatterns = [
     path('api/',include("properties.urls")),
 
     
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
