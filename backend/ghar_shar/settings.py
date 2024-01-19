@@ -39,7 +39,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS=True
 
-ALLOWED_HOSTS = ['http://localhost:3000','http://127.0.0.1:3000/','localhost']
+ALLOWED_HOSTS = ['http://localhost:3000','http://127.0.0.1:3000/','localhost','127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000','http://127.0.0.1:3000/']
 
@@ -143,3 +143,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Actual directory user files go to
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'mediafiles')
+
+# URL used to access the media
+MEDIA_URL = '/media/'
