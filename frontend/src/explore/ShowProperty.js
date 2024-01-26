@@ -18,14 +18,15 @@ function getRandomNumber() {
 function getPropertyAttributes(property) {
   document.title =
     property?.name.charAt(0).toUpperCase() + property?.name.slice(1);
-  const { location, furnished, bedRoom, livingRoom, bathRoom } = property;
-  const email = property?.owner?.email;
+  const { location, furnished, bed_room, living_room, bath_room, email } =
+    property;
+  // const email = property?.owner?.email;
   let propertyAttributes = {
     location,
     furnished: furnished === true ? "Yes" : "No",
-    bedRoom,
-    livingRoom,
-    bathRoom,
+    bed_room,
+    living_room,
+    bath_room,
     email,
   };
   return propertyAttributes;
@@ -53,12 +54,13 @@ const ShowProperty = () => {
     }
   }, [state, params.id]);
   const RenderPropertyAttributes = () => {
+    console.log(propertyAttributes);
     return (
       <div className="self-center w-10/12 p-5 mx-5 mt-5 leading-8 rounded-lg attributes md:leading-10 bg-gradient-to-r from-sky-200 to-cyan-50 md:w-11/12 lg:w-3/5 md:self-start ">
         {Object.entries(propertyAttributes).map(([key, value]) => {
           return (
             <div key={key} className="flex gap-x-20 md:gap-x-28 lg:gap-x-48 ">
-              <span className="w-20 capitalize">{key}</span>
+              <span className="w-20 capitalize">{key.split("_").join("")}</span>
               <span>{propertyAttributes[key]}</span>
             </div>
           );
@@ -76,11 +78,8 @@ const ShowProperty = () => {
         <div className="flex flex-col w-full m-5 mb-10 left md:w-1/3 md:mb-1 ">
           <img
             className="w-11/12 transition-transform md:w-full hover:scale-105 rounded-xl"
-            src={
-              "http://127.0.0.1:5000/" +
-              property?.imageUrl.substring(property?.imageUrl.indexOf("photo"))
-            }
-            alt="property?"
+            src={"http://127.0.0.1:8000" + property?.image_url}
+            alt="property"
             loading="lazy"
           />
           <div className="flex flex-col items-center justify-between text-l gap-y-5">
@@ -114,7 +113,8 @@ const ShowProperty = () => {
           <RenderPropertyAttributes />
           <div className="flex flex-col items-center justify-center mx-5 mb-10 md:w-1/2 md:mt-5 md:mb-16">
             <div className="flex items-center justify-center px-5 py-2 mx-5 mt-10 text-2xl tracking-wide text-black rounded-lg shadow-lg w-36 bg-gradient-to-t from-slate-200 to-cyan-100 ">
-              For {property?.propertyType === "Rent" ? "Rent" : "Sale"}
+              For{" "}
+              {property?.property_type?.toLowerCase() === "r" ? "Rent" : "Sale"}
             </div>
             <div className="w-3 h-16 shadow-lg bg-gradient-to-b from-slate-200 to-cyan-100"></div>
             <div className="w-1/2 h-1 bg-slate-400"></div>

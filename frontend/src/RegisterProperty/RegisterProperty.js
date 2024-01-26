@@ -74,17 +74,20 @@ const RegisterProperty = () => {
       }, 2000);
     }
     const formData = new FormData();
-    formData.append("photo", image.data, image.data.name);
+    formData.append("image_url", image.data, image.data.name);
+    formData.append("name", formState.name);
+    formData.append("location", formState.address);
+    formData.append("description", formState.description);
+    formData.append("bath_room", formState.bathrooms);
+    formData.append("living_room", formState.livingRooms);
+    formData.append("price", formState.price);
+    formData.append("bed_room", formState.bedrooms);
+    formData.append("property_type", rentClicked ? "R" : "S");
+    formData.append("is_furnished", !!isFurnished);
 
-    axios.post("/property", {
-      method: "POST",
+    axios.post("/property", formData, {
       headers: {
-        "Content-Type": "mutlipart/form-data",
-      },
-      body: {
-        ...formState,
-        rent: rentClicked,
-        furnished: isFurnished,
+        "Content-Type": "multipart/form-data",
       },
     });
 

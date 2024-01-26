@@ -54,7 +54,7 @@ const Explore = () => {
     <>
       <Navbar />
       <div className="flex flex-col items-center w-screen h-screen transition-all properties bg-slate-100 ">
-        {properties.map((property, index) => {
+        {properties?.map((property, index) => {
           return (
             returnIndexRange(index) && <LinkProperty property={property} />
           );
@@ -64,14 +64,14 @@ const Explore = () => {
             className={`prev  ${buttonProperty}`}
             onClick={() => {
               if (selectedPage === 1) {
-                return setSelectedPage(pagingationArr.length);
+                return setSelectedPage(pagingationArr?.length);
               }
               setSelectedPage((prevPage) => prevPage - 1);
             }}
           >
             Prev
           </span>
-          {pagingationArr.map((page, index) => {
+          {pagingationArr?.map((page, index) => {
             return (
               <ShowPage
                 page={page}
@@ -84,7 +84,7 @@ const Explore = () => {
           <span
             className={`next  ${buttonProperty}`}
             onClick={() => {
-              if (selectedPage === pagingationArr.length) {
+              if (selectedPage === pagingationArr?.length) {
                 return setSelectedPage(1);
               }
               setSelectedPage((prevPage) => prevPage + 1);

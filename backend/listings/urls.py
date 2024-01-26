@@ -1,7 +1,10 @@
-from django.urls import path
-from .views import ListingAPIView,ListingDetailAPIView
+from django.urls import path,include
+from rest_framework.routers import DefaultRouter
+from .views import ListingViewSet
 
+
+router=DefaultRouter()
+router.register(r'listing',ListingViewSet)
 urlpatterns = [
-    path("listing",ListingAPIView.as_view()),
-    path("listing/<int:id>",ListingDetailAPIView.as_view())
+    path('',include(router.urls))
 ]

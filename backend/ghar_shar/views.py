@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.hashers import make_password,check_password
 from django.contrib.sessions.models import Session
 from django.utils import timezone
+from django.urls import reverse
 def get_form_data(request):
     requestBody=request.data["body"]
     data = {
@@ -101,7 +102,8 @@ def get_user(request):
     # user={'name':'John','age':21}
     # print(all_users.get_queryset())
     serialized_users=UserSerializer(all_users)
-    return Response(serialized_users.data)
+
+    return Response({"data":reverse("api-login")})
 
 
 

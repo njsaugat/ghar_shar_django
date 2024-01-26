@@ -23,12 +23,7 @@ const LinkProperty = ({ property, smallDisplay, validUser, user }) => {
         <div className="w-1/3 image">
           <img
             className="object-cover w-full h-full transition-transform rounded-3xl hover:scale-105 "
-            src={
-              "http://127.0.0.1:5000/" +
-              property?.imageUrl?.substring(
-                property?.imageUrl?.indexOf("photo")
-              )
-            }
+            src={"http://127.0.0.1:8000" + property?.image_url}
             alt=""
             srcSet=""
             loading="lazy"
@@ -36,23 +31,27 @@ const LinkProperty = ({ property, smallDisplay, validUser, user }) => {
         </div>
         <div className="w-2/3 h-full">
           <h1 className="text-lg font-bold tracking-wide capitalize">
-            {property.name}
+            {property?.name}
           </h1>
 
           <p className="my-3 text-sm leading-4 text-slate-500">
-            {property.description.substring(0, DESCRIPTION_MAX_LENGTH) + "..."}
+            {property?.description.substring(0, DESCRIPTION_MAX_LENGTH) + "..."}
           </p>
 
           <div className="flex items-center gap-5 attributes gap-x-20 ">
             <span className="text-lg font-bold price">
-              रु {numberWithCommas(property.price)}
+              रु {numberWithCommas(property?.price)}
             </span>
             {!smallDisplay && (
-              <span className="type">{property.propertyType}</span>
+              <span className="type">
+                {property?.property_type?.toLowerCase() === "r"
+                  ? "Rent"
+                  : "Sale"}
+              </span>
             )}
           </div>
           <hr className="my-3" />
-          <div className="mt-2 owner">{property.location}</div>
+          <div className="mt-2 owner">{property?.location}</div>
         </div>
       </div>
       {validUser && (

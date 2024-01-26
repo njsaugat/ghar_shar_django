@@ -10,7 +10,7 @@ from .serializers import PropertySerializer
 from ghar_shar.serializers import UserSerializer
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-
+from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 
 def get_form_data(request):
     data = {
@@ -28,6 +28,7 @@ def get_form_data(request):
 
 class PropertyAPIView(APIView):
     permission_classes=[permissions.AllowAny]
+    parser_classes = (MultiPartParser, FormParser,JSONParser)
     
     
     
@@ -37,10 +38,10 @@ class PropertyAPIView(APIView):
         return Response(serializer.data,status=status.HTTP_200_OK)
     
     def post(self,request,*args,**kwargs):
-        data=get_form_data(request=request)
-        serializedData = PropertySerializer(data=data)
-        # serializedData=ListingSerializer(request.data)
+        # print("-----------------------------",request,"----------------------------------")
+        # data=get_form_data(request=request)
         
+        serializedData = PropertySerializer(data=request.data)
         if serializedData.is_valid():
             serializedData.save()
             return Response(serializedData.data,status=status.HTTP_201_CREATED)
@@ -94,16 +95,18 @@ class UserPropertyAPIView(APIView):
 
     def get(self,request,*args,**kwargs):
         user_id = getattr(request, 'user_id', None)
-        user=User.objects.filter(id=user_id)
+        user=User.objects.get(id=user_id)
         if user:
             properties=Property.objects.filter(user_id=user_id)
-            print("user--->",len(properties))
             user_serializer=UserSerializer(user)
+            serialized_data=user_serializer.data
             if len(properties)>0:                
-                serializer=PropertySerializer(properties,many=True)
-                response_data= get_user_properties(user=user_serializer.data,properties=serializer.data)
+                property_serializer=PropertySerializer(properties,many=True)
+                serialized_data["properties"]=property_serializer.data
             else:
-                response_data=get_user_properties(user=user_serializer.data,properties=[])
-                print("-------------------------",response_data)
-            return Response(response_data,status=status.HTTP_200_OK)
+                serialized_data["properties"]=[]
+            return Response(serialized_data,status=status.HTTP_200_OK)
         return Response({"res":"User doesn't exists"},status=status.HTTP_400_BAD_REQUEST)
+
+
+
